@@ -1,7 +1,31 @@
 library(shiny)
+library(ggplot2)
+
+configuracao<- theme(
+  axis.title.x = element_text(color="black", 
+                              size=14,
+                              face="bold"), 
+  axis.title.y = element_text(color="black", 
+                              size=14,
+                              face="bold"), 
+  strip.text.x = element_text(size=14, 
+                              color = "black", 
+                              face = "bold"),
+  strip.text.y = element_text(size=14, 
+                              color = "black",
+                              face = "bold"),
+  axis.text.x = element_text(size = 14, 
+                             color = "black", 
+                             face = "bold" ),
+  axis.text.y = element_text(size=14, 
+                             color = "black", 
+                             face = "bold") )
+
 ui<- fluidPage(
   titlePanel(
-    span("Exemplo de um modelo não linear (SSasymp)", style = "color:red")    ),
+    span("Exemplo de um modelo não linear:
+         y~Asym+(R0-Asym)*exp(-exp(lrc)*x)", 
+         style = "color:red")    ),
   helpText("Descrição do seu aplicativo"),
   sidebarPanel(
 sliderInput("Asym","Asym",min=1,max=100, step=1,value = 50,
@@ -32,15 +56,18 @@ output$resumoIdade<-  renderPrint({ summary(x) })
 output$resumoAltura<- renderPrint({ summary(y) })
   
 output$grafico<- renderPlot({
-  plot(x,y, lwd=2,family="Bookman",cex.main=2,ylim=c(-10,100),
-       xlim = c(0,max(x)),pch=19,
-       xlab="Idade (anos)",ylab="Altura (pés)",
-       main="y~Asym+(R0-Asym)*exp(-exp(lrc)*x)",col="red")
-  curve(modeloSSasymp(x,Asym=input$Asym,R0=input$R0,lrc=input$lrc),
-        0,max(x), col="blue", lwd=3, add = TRUE)
-  abline(h=0,v=0,col="red", lwd=1, lty=2)
-  abline(h=c(input$Asym,input$R0),
-         v=-input$lrc,col="black", lwd=2, lty=3)
-})  
+  
+dados<- data.frame(x,y)
+
+  ggplot(dados, aes(x,y))+
+    geom_point(col="black",size=6,pch=20)+
+    configuracao+
+    labs(x="Idade (Anos)", y="Altura (pés)")+
+    stat_function(fun=modeloSSasymp,
+      args = list(Asym=input$Asym,R0=input$R0,lrc=input$lrc),
+      col="red",size=3)+
+    geom_hline(yintercept = c(input$Asym,input$R0),
+               col="gray", lty=2)
+    })  
   }
 shinyApp(ui=ui, server=server)

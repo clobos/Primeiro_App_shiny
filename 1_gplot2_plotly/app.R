@@ -7,21 +7,21 @@ library(shiny)
 
 configuracao<- theme(
     axis.title.x = element_text(color="black", 
-                                size=10,
+                                size=14,
                                 face="bold"), 
     axis.title.y = element_text(color="black", 
-                                size=10,
+                                size=14,
                                 face="bold"), 
-    strip.text.x = element_text(size=10, 
+    strip.text.x = element_text(size=14, 
                                 color = "black", 
                                 face = "bold"),
-    strip.text.y = element_text(size=10, 
+    strip.text.y = element_text(size=14, 
                                 color = "black",
                                 face = "bold"),
-    axis.text.x = element_text(size = 12, 
+    axis.text.x = element_text(size=14, 
                                color = "black", 
                                face = "bold" ),
-    axis.text.y = element_text(size=10, 
+    axis.text.y = element_text(size=14, 
                                color = "black", 
                                face = "bold") )
 
